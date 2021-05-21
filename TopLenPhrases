@@ -1,0 +1,264 @@
+// Copy and paste your work, or start typing.
+/**********************************************************
+***********************************************************
+***********************************************************
+Jose Olivarez & Pablo
+HomeWork 2
+CMPE 3334
+***********************************************************
+***********************************************************
+Noe is the best Programmer Ever****************************/
+#ifdef _WIN32
+#include <conio.h>  // for _getch(), below.
+#endif
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <string>
+#include <map>
+#include <cstdlib>
+#include <vector>
+#include "myPairType.h"
+//,/#include "Source.h"
+
+using namespace std;
+
+bool isPuncti(char c)
+{
+	if ((c == '\'' || c == '-'))
+		return false;
+	else
+		return ispunct(c);
+}
+bool readFile(map<string, int> &book, string fileName) {
+	cout << "Reading book " << fileName << endl;
+	ifstream file;
+	file.open(fileName);
+	if (!file.is_open())
+		return false;
+
+	string line;
+	string phrase;
+	while (getline(file, line))
+	{
+		//istringstream iss(line);
+		for (char c : line) {
+			if ((unsigned int)c >= 0 && (unsigned int)c <= 255) {
+				if (!isPuncti(c))
+				{
+					phrase += c;
+				}
+				else {
+					if (book.find(phrase) == book.end())
+						book.insert(std::make_pair(phrase, 1));
+					else
+						book[phrase]++;
+					phrase = "";
+				}
+			}
+			else {
+				phrase += c;
+			}
+		}
+	}
+	file.close();
+	return true;
+}
+
+int main()
+{
+	map<string, int> bk1, bk2;
+	map<string, int>::iterator it;
+	vector<myPairType> topLen1Phrases, topLen2Phrases, topLen3Phrases, topLen4Phrases, topLen5Phrases, topLen6Phrases, topLen7Phrases, topLen8Phrases, topLen9Phrases, topLen10Phrases; //assume we deal with phrases with one words or two words
+	unsigned int i;
+	string str, tmp;
+	myPairType p;
+
+	//load phrases into bk1
+	/*
+	cout<<"load book 1 "<<endl;
+	for (i = 0; i<5; i++)
+	{
+	cout<<"enter a str = ";
+	getline(cin, str, '\n');
+	if (bk1.find(str)== bk1.end())
+	bk1.insert(std::make_pair(str, 1));
+	else
+	bk1[str]++;
+	}*/
+
+	if (!readFile(bk1, "hw2_huckleberryFinn.txt") || !readFile(bk2, "hw2_tomSawyer.txt")) {
+		cout << "Error reading books." << endl;
+		exit(0);
+	}
+
+	//load pharses into bk2
+	/*
+	cout<<"load book 2 "<<endl;
+	for (i = 0; i<5; i++)
+	{
+	cout<<"enter a str = ";
+	getline(cin, str, '\n');
+	if (bk2.find(str)== bk2.end())
+	bk2.insert(std::make_pair(str, 1));
+	else
+	bk2[str]++;
+	}*/
+
+	cout << " finished loading " << endl;
+	cout << " print book 1" << endl;
+	it = bk1.begin();
+	while (it != bk1.end())
+	{
+		cout << it->first << "***" << it->second << endl;
+		it++;
+	}
+	cout << " print book 2 " << endl;
+	it = bk2.begin();
+	while (it != bk2.end())
+	{
+		cout << it->first << "***" << it->second << endl;
+		it++;
+	}
+	cout << " finised printing two books " << endl;
+
+	//find top common phrases
+	it = bk1.begin();
+	while (it != bk1.end())
+	{
+		tmp = it->first;
+		if (bk2.find(tmp) != bk2.end()) //find a common phrase
+		{
+			//cout << "p.setPair()" << endl;
+			//cout << tmp << " " << bk1[tmp] << " " << bk2[tmp] << endl;
+			p.setPair(tmp, smaller(bk1[tmp], bk2[tmp]));
+			//cout << "findNumOfWords()" << endl;
+			if (findNumOfWords(tmp) == 1)
+			{
+				insert(topLen1Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 2)
+			{
+				insert(topLen2Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 3)
+			{
+				insert(topLen3Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 4)
+			{
+				insert(topLen4Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 5)
+			{
+				insert(topLen5Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 6)
+			{
+				insert(topLen6Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 7)
+			{
+				insert(topLen7Phrases, p);
+			}
+
+			else if (findNumOfWords(tmp) == 8)
+			{
+				insert(topLen8Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 9)
+			{
+				insert(topLen9Phrases, p);
+			}
+			else if (findNumOfWords(tmp) == 10)
+			{
+				insert(topLen10Phrases, p);
+			}
+
+			else
+			{
+				cout << "this word sucks";
+				it++;
+			}
+		}
+		it++;
+	}
+	//print out top phrase
+	cout << " PHRASES WITH ONE WORD:" << endl;
+	for (i = 0; i < topLen1Phrases.size(); i++) {
+		cout << topLen1Phrases[i].getPhrase() << " ** " << topLen1Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen1Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen1Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH TWO WORDS:" << endl;
+	for (i = 0; i < topLen2Phrases.size(); i++) {
+		cout << topLen2Phrases[i].getPhrase() << " ** " << topLen1Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen2Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen2Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH THREE WORDS:" << endl;
+	for (i = 0; i < topLen3Phrases.size(); i++)
+	{
+		cout << topLen3Phrases[i].getPhrase() << " ** " << topLen3Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen3Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen3Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH FOUR WORDS:" << endl;
+	for (i = 0; i < topLen4Phrases.size(); i++)
+	{
+		cout << topLen4Phrases[i].getPhrase() << " ** " << topLen4Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen4Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen4Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH FIVE WORDS:" << endl;
+	for (i = 0; i < topLen5Phrases.size(); i++)
+	{
+		cout << topLen5Phrases[i].getPhrase() << " ** " << topLen5Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen5Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen5Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH SIX WORDS:" << endl;
+	for (i = 0; i < topLen6Phrases.size(); i++)
+	{
+		cout << topLen6Phrases[i].getPhrase() << " ** " << topLen6Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen6Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen6Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH SEVEN WORDS:" << endl;
+	for (i = 0; i < topLen7Phrases.size(); i++)
+	{
+		cout << topLen7Phrases[i].getPhrase() << " ** " << topLen7Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen7Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen7Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH EIGHT  WORDS:" << endl;
+	for (i = 0; i < topLen8Phrases.size(); i++)
+	{
+		cout << topLen8Phrases[i].getPhrase() << " ** " << topLen8Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen8Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen8Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH NINE WORDS:" << endl;
+	for (i = 0; i < topLen9Phrases.size(); i++)
+	{
+		cout << topLen9Phrases[i].getPhrase() << " ** " << topLen9Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen9Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen9Phrases[i].getPhrase()] << endl;
+	}
+	cout << "PHRASES WITH TEN WORDS" << endl;
+	for (i = 0; i < topLen10Phrases.size(); i++)
+	{
+		cout << topLen10Phrases[i].getPhrase() << " ** " << topLen10Phrases[i].getFreq() << endl;
+		cout << "Frequency in book 1: " << bk1[topLen10Phrases[i].getPhrase()] << endl;
+		cout << "Frequency in book 2: " << bk2[topLen10Phrases[i].getPhrase()] << endl;
+	}
+#ifdef _WIN32
+	cout << "Press any key to continue: ";
+	_getch();
+#elif __linux__
+#endif
+
+	return 1;
+}
